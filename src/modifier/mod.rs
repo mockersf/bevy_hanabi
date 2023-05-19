@@ -172,8 +172,8 @@ mod tests {
         let rm: &dyn Reflect = m.as_reflect();
         let rm_serde: &dyn Reflect = m_serde.as_reflect();
         assert_eq!(
-            rm.get_type_info().type_id(),
-            rm_serde.get_type_info().type_id()
+            rm.get_represented_type_info().unwrap().type_id(),
+            rm_serde.get_represented_type_info().unwrap().type_id()
         );
 
         assert!(rm_serde.is::<InitPositionSphereModifier>());

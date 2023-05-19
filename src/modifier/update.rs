@@ -684,7 +684,7 @@ mod tests {
 
     use super::*;
 
-    use naga::front::wgsl::Parser;
+    use naga::front::wgsl::Frontend;
 
     #[test]
     fn mod_accel() {
@@ -810,7 +810,7 @@ fn main() {{
 }}"##
             );
 
-            let mut parser = Parser::new();
+            let mut parser = Frontend::new();
             let res = parser.parse(&code);
             if let Err(err) = &res {
                 println!("Modifier: {:?}", modifier.type_name());

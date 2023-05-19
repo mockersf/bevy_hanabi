@@ -51,20 +51,6 @@ pub struct HanabiPlugin;
 
 impl Plugin for HanabiPlugin {
     fn build(&self, app: &mut App) {
-        let render_device = app.world.get_resource::<RenderDevice>().unwrap().clone();
-
-        // Check device limits
-        let limits = render_device.limits();
-        if limits.max_bind_groups < 4 {
-            let adapter_name = app
-                .world
-                .get_resource::<RenderAdapterInfo>()
-                .map(|ai| &ai.name[..])
-                .unwrap_or("<unknown>");
-            error!("Hanabi requires a GPU device supporting at least 4 bind groups (Limits::max_bind_groups).\n  Current adapter: {}\n  Supported bind groups: {}", adapter_name, limits.max_bind_groups);
-            return;
-        }
-
         // Register asset
         app.add_asset::<EffectAsset>()
             .add_event::<RemovedEffectsEvent>()
@@ -99,40 +85,7 @@ impl Plugin for HanabiPlugin {
         app.register_type::<ParticleEffect>();
         app.register_type::<Spawner>();
 
-        let effects_meta = EffectsMeta::new(render_device);
-
-        // Register the custom render pipeline
-        let render_app = app.sub_app_mut(RenderApp);
-        render_app
-            .insert_resource(effects_meta)
-            .init_resource::<EffectBindGroups>()
-            .init_resource::<DispatchIndirectPipeline>()
-            .init_resource::<ParticlesInitPipeline>()
-            .init_resource::<SpecializedComputePipelines<ParticlesInitPipeline>>()
-            .init_resource::<ParticlesUpdatePipeline>()
-            .init_resource::<SpecializedComputePipelines<ParticlesUpdatePipeline>>()
-            .init_resource::<ParticlesRenderPipeline>()
-            .init_resource::<SpecializedRenderPipelines<ParticlesRenderPipeline>>()
-            .init_resource::<ExtractedEffects>()
-            .init_resource::<EffectAssetEvents>()
-            .init_resource::<SimParams>()
-            .configure_sets(
-                Render,
-                (
-                    EffectSystems::PrepareEffects.in_set(RenderSet::Prepare),
-                    EffectSystems::QueueEffects.in_set(RenderSet::Queue),
-                ),
-            )
-            .edit_schedule(ExtractSchedule, |schedule| {
-                schedule.add_systems((extract_effects, extract_effect_events));
-            })
-            .add_systems(
-                Render,
-                (
-                    prepare_effects.in_set(EffectSystems::PrepareEffects),
-                    queue_effects.in_set(EffectSystems::QueueEffects),
-                ),
-            );
+        let render_app: &mut App = app.sub_app_mut(RenderApp);
 
         // Register the draw function for drawing the particles. This will be called
         // during the main 2D/3D pass, at the Transparent2d/3d phase, after the
@@ -175,5 +128,56 @@ impl Plugin for HanabiPlugin {
             main_graph::node::HANABI,
             bevy::render::main_graph::node::CAMERA_DRIVER,
         );
+    }
+
+    fn finish(&self, app: &mut App) {
+        let render_device = app.world.get_resource::<RenderDevice>().unwrap().clone();
+
+        // Check device limits
+        let limits = render_device.limits();
+        if limits.max_bind_groups < 4 {
+            let adapter_name = app
+                .world
+                .get_resource::<RenderAdapterInfo>()
+                .map(|ai| &ai.name[..])
+                .unwrap_or("<unknown>");
+            error!("Hanabi requires a GPU device supporting at least 4 bind groups (Limits::max_bind_groups).\n  Current adapter: {}\n  Supported bind groups: {}", adapter_name, limits.max_bind_groups);
+            return;
+        }
+
+        let effects_meta = EffectsMeta::new(render_device);
+
+        // Register the custom render pipeline
+        let render_app: &mut App = app.sub_app_mut(RenderApp);
+        render_app
+            .insert_resource(effects_meta)
+            .init_resource::<EffectBindGroups>()
+            .init_resource::<DispatchIndirectPipeline>()
+            .init_resource::<ParticlesInitPipeline>()
+            .init_resource::<SpecializedComputePipelines<ParticlesInitPipeline>>()
+            .init_resource::<ParticlesUpdatePipeline>()
+            .init_resource::<SpecializedComputePipelines<ParticlesUpdatePipeline>>()
+            .init_resource::<ParticlesRenderPipeline>()
+            .init_resource::<SpecializedRenderPipelines<ParticlesRenderPipeline>>()
+            .init_resource::<ExtractedEffects>()
+            .init_resource::<EffectAssetEvents>()
+            .init_resource::<SimParams>()
+            .configure_sets(
+                Render,
+                (
+                    EffectSystems::PrepareEffects.in_set(RenderSet::Prepare),
+                    EffectSystems::QueueEffects.in_set(RenderSet::Queue),
+                ),
+            )
+            .edit_schedule(ExtractSchedule, |schedule| {
+                schedule.add_systems((extract_effects, extract_effect_events));
+            })
+            .add_systems(
+                Render,
+                (
+                    prepare_effects.in_set(EffectSystems::PrepareEffects),
+                    queue_effects.in_set(EffectSystems::QueueEffects),
+                ),
+            );
     }
 }

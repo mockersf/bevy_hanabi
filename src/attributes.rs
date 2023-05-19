@@ -211,7 +211,7 @@ impl Struct for Attribute {
 
     fn clone_dynamic(&self) -> DynamicStruct {
         let mut dynamic = DynamicStruct::default();
-        dynamic.set_name(::std::string::ToString::to_string(Reflect::type_name(self)));
+        dynamic.set_represented_type(Reflect::get_represented_type_info(self));
         dynamic.insert_boxed("name", Reflect::clone_value(&self.0.name));
         dynamic.insert_boxed("default_value", Reflect::clone_value(&self.0.default_value));
         dynamic
@@ -225,8 +225,8 @@ impl Reflect for Attribute {
     }
 
     #[inline]
-    fn get_type_info(&self) -> &'static TypeInfo {
-        <Attribute as Typed>::type_info()
+    fn get_represented_type_info(&self) -> Option<&'static TypeInfo> {
+        Some(<Attribute as Typed>::type_info())
     }
 
     #[inline]
@@ -877,13 +877,13 @@ mod tests {
         math::{Vec2, Vec3, Vec4},
         reflect::TypeRegistration,
     };
-    use naga::{front::wgsl::Parser, proc::Layouter};
+    use naga::{front::wgsl::Frontend, proc::Layouter};
 
     // Ensure the size and alignment of all types conforms to the WGSL spec by
     // querying naga as a reference.
     #[test]
     fn value_type_align() {
-        let mut parser = Parser::new();
+        let mut parser = Frontend::new();
         for (value_type, value) in &[
             (ValueType::Float, crate::graph::Value::Float(0.)),
             (
@@ -1001,7 +1001,10 @@ mod tests {
                 }
 
                 let d = s.clone_dynamic();
-                assert_eq!(TypeRegistration::of::<Attribute>().type_name(), d.name());
+                assert_eq!(
+                    TypeRegistration::of::<Attribute>().type_info().type_id(),
+                    d.get_represented_type_info().unwrap().type_id()
+                );
                 assert_eq!(Some(0), d.index_of("name"));
                 assert_eq!(Some(1), d.index_of("default_value"));
             }
