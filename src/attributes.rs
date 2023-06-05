@@ -4,7 +4,8 @@ use bevy::{
     math::{Vec2, Vec3, Vec4},
     reflect::{
         utility::NonGenericTypeInfoCell, DynamicStruct, FieldIter, FromReflect, NamedField,
-        Reflect, ReflectMut, ReflectOwned, ReflectRef, Struct, StructInfo, TypeInfo, Typed,
+        Reflect, ReflectMut, ReflectOwned, ReflectRef, Struct, StructInfo, TypeInfo, TypePath,
+        Typed,
     },
 };
 use serde::{Deserialize, Serialize};
@@ -134,7 +135,7 @@ impl AttributeInner {
 /// Common attributes include the particle's position, its age, or its color.
 /// See [`Attribute::ALL`] for a list of supported attributes. Custom attributes
 /// are not supported.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, TypePath)]
 #[serde(try_from = "&str", into = "&'static str")]
 pub struct Attribute(pub(crate) &'static AttributeInner);
 
@@ -290,6 +291,10 @@ impl Reflect for Attribute {
 
     fn reflect_owned(self: Box<Self>) -> ReflectOwned {
         ReflectOwned::Struct(self)
+    }
+
+    fn get_type_path(&self) -> &dyn bevy::reflect::DynamicTypePath {
+        self
     }
 }
 
