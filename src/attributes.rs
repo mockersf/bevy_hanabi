@@ -292,10 +292,6 @@ impl Reflect for Attribute {
     fn reflect_owned(self: Box<Self>) -> ReflectOwned {
         ReflectOwned::Struct(self)
     }
-
-    fn get_type_path(&self) -> &dyn bevy::reflect::DynamicTypePath {
-        self
-    }
 }
 
 impl FromReflect for Attribute {

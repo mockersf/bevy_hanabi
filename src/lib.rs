@@ -1113,6 +1113,7 @@ fn compile_effects(
 /// system, to clean-up unused GPU resources.
 ///
 /// [`extract_effects()`]: crate::render::extract_effects
+#[derive(Event)]
 struct RemovedEffectsEvent {
     entities: Vec<Entity>,
 }
