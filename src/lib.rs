@@ -309,9 +309,7 @@ impl ToWgslString for Value<Vec4> {
 }
 
 /// Simulation space for the particles of an effect.
-#[derive(
-    Debug, Default, Clone, Copy, PartialEq, Eq, Reflect, FromReflect, Serialize, Deserialize,
-)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Reflect, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum SimulationSpace {
     /// Particles are simulated in global space.
@@ -330,7 +328,7 @@ pub enum SimulationSpace {
 ///
 /// A property with this name might not exist, in which case the value will be
 /// discarded silently when the instance is initialized from its asset.
-#[derive(Debug, Clone, PartialEq, Reflect, FromReflect)]
+#[derive(Debug, Clone, PartialEq, Reflect)]
 pub struct PropertyValue {
     /// Name of the property the value should be assigned to.
     name: String,

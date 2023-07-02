@@ -34,7 +34,7 @@ impl ShaderCache {
         if let Some(handle) = self.cache.get(source) {
             handle.clone()
         } else {
-            let handle = shaders.add(Shader::from_wgsl(source.to_string()));
+            let handle = shaders.add(Shader::from_wgsl(source.to_string(), "bevy_hanaby"));
             debug!("Inserted new configured shader: {:?}\n{}", handle, source);
             self.cache.insert(source.to_string(), handle.clone());
             handle

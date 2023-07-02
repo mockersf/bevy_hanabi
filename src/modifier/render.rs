@@ -103,7 +103,7 @@ macro_rules! impl_mod_render {
 /// # Attributes
 ///
 /// This modifier does not require any specific particle attribute.
-#[derive(Default, Debug, Clone, PartialEq, Reflect, FromReflect, Serialize, Deserialize)]
+#[derive(Default, Debug, Clone, PartialEq, Reflect, Serialize, Deserialize)]
 pub struct ParticleTextureModifier {
     /// The texture image to modulate the particle color with.
     #[serde(skip)]
@@ -131,7 +131,7 @@ impl RenderModifier for ParticleTextureModifier {
 /// # Attributes
 ///
 /// This modifier does not require any specific particle attribute.
-#[derive(Debug, Default, Clone, Copy, PartialEq, Reflect, FromReflect, Serialize, Deserialize)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Reflect, Serialize, Deserialize)]
 pub struct SetColorModifier {
     /// The particle color.
     pub color: Value<Vec4>,
@@ -181,7 +181,7 @@ impl RenderModifier for SetColorModifier {
 /// This modifier requires the following particle attributes:
 /// - [`Attribute::AGE`]
 /// - [`Attribute::LIFETIME`]
-#[derive(Debug, Default, Clone, PartialEq, Hash, Reflect, FromReflect, Serialize, Deserialize)]
+#[derive(Debug, Default, Clone, PartialEq, Hash, Reflect, Serialize, Deserialize)]
 pub struct ColorOverLifetimeModifier {
     /// The color gradient defining the particle color based on its lifetime.
     pub gradient: Gradient<Vec4>,
@@ -224,7 +224,7 @@ impl RenderModifier for ColorOverLifetimeModifier {
 /// # Attributes
 ///
 /// This modifier does not require any specific particle attribute.
-#[derive(Debug, Default, Clone, Copy, PartialEq, Reflect, FromReflect, Serialize, Deserialize)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Reflect, Serialize, Deserialize)]
 pub struct SetSizeModifier {
     /// The particle color.
     pub size: Value<Vec2>,
@@ -268,7 +268,7 @@ impl RenderModifier for SetSizeModifier {
 /// This modifier requires the following particle attributes:
 /// - [`Attribute::AGE`]
 /// - [`Attribute::LIFETIME`]
-#[derive(Debug, Default, Clone, PartialEq, Hash, Reflect, FromReflect, Serialize, Deserialize)]
+#[derive(Debug, Default, Clone, PartialEq, Hash, Reflect, Serialize, Deserialize)]
 pub struct SizeOverLifetimeModifier {
     /// The size gradient defining the particle size based on its lifetime.
     pub gradient: Gradient<Vec2>,
@@ -307,9 +307,7 @@ impl RenderModifier for SizeOverLifetimeModifier {
 /// # Attributes
 ///
 /// This modifier does not require any specific particle attribute.
-#[derive(
-    Debug, Default, Clone, Copy, PartialEq, Hash, Reflect, FromReflect, Serialize, Deserialize,
-)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Hash, Reflect, Serialize, Deserialize)]
 pub struct BillboardModifier;
 
 impl_mod_render!(BillboardModifier, &[]);
@@ -328,9 +326,7 @@ impl RenderModifier for BillboardModifier {
 /// This modifier requires the following particle attributes:
 /// - [`Attribute::POSITION`]
 /// - [`Attribute::VELOCITY`]
-#[derive(
-    Debug, Default, Clone, Copy, PartialEq, Hash, Reflect, FromReflect, Serialize, Deserialize,
-)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Hash, Reflect, Serialize, Deserialize)]
 pub struct OrientAlongVelocityModifier;
 
 impl_mod_render!(

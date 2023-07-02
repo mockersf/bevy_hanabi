@@ -71,7 +71,7 @@ impl ToWgslString for ValueType {
     }
 }
 
-#[derive(Debug, Clone, Reflect, FromReflect)]
+#[derive(Debug, Clone, Reflect)]
 pub(crate) struct AttributeInner {
     name: Cow<'static, str>,
     default_value: Value,

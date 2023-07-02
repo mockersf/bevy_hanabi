@@ -10,7 +10,7 @@ use std::fmt::Debug;
 
 use bevy::{
     math::{Vec2, Vec3, Vec4},
-    reflect::{FromReflect, Reflect},
+    reflect::Reflect,
     utils::FloatOrd,
 };
 use serde::{Deserialize, Serialize};
@@ -18,7 +18,7 @@ use serde::{Deserialize, Serialize};
 use crate::{ToWgslString, ValueType};
 
 /// Variant storage for a simple value.
-#[derive(Debug, Clone, Copy, PartialEq, Reflect, FromReflect, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Reflect, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum Value {
     /// Single `f32` value.

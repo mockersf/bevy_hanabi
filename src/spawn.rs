@@ -28,7 +28,7 @@ pub struct Random(pub Pcg32);
 ///
 /// This enum represents a value which is either constant, or randomly sampled
 /// according to a given probability distribution.
-#[derive(Debug, Copy, Clone, Serialize, Deserialize, PartialEq, Eq, Reflect, FromReflect)]
+#[derive(Debug, Copy, Clone, Serialize, Deserialize, PartialEq, Eq, Reflect)]
 #[non_exhaustive]
 pub enum Value<T: Copy + FromReflect> {
     /// Single constant value.
@@ -94,7 +94,7 @@ impl<T: Copy + FromReflect> From<T> for Value<T> {
 ///
 /// [`Attribute::SIZE`]: crate::Attribute::SIZE
 /// [`Attribute::SIZE2`]: crate::Attribute::SIZE2
-#[derive(Debug, Clone, Copy, PartialEq, Reflect, FromReflect, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Reflect, Serialize, Deserialize)]
 pub enum DimValue {
     /// Scalar.
     D1(Value<f32>),
@@ -156,7 +156,7 @@ impl ToWgslString for DimValue {
 /// particles and initialize them. The number of particles to spawn is stored as
 /// a floating-point number, and any remainder accumulates for the next
 /// emitting.
-#[derive(Debug, Copy, Clone, PartialEq, Reflect, FromReflect, Serialize, Deserialize)]
+#[derive(Debug, Copy, Clone, PartialEq, Reflect, Serialize, Deserialize)]
 #[reflect(Default)]
 pub struct Spawner {
     /// Number of particles to spawn over [`spawn_time`].
